@@ -6,7 +6,7 @@ Approach: I used partial transfer learning from VGG16 and a 24-layer CNN. I spli
 
 Data: 5863 infant X-Ray images (all images normalized and converted to 244x244x3) from Guangzhou Women and Children’s Medical Center in China. Dependent variable: Pneumonia (N training=3875) vs. Normal (N training=1341). Performed data augmentation (horizontal flips, rotation, random brightness changes) to correct for class imbalance.​
 
-For the first few layers, which capture general details like blobs, patches, edges, ectetera, I load the weights from VGG16 and fine tune them, instead of using random initialization. After that, I use convolutional, batch norm, and max pooling, layers, ending with a softmax layer for binary prediction.
+Model: For the first few layers, which capture general details like blobs, patches, edges, ectetera, I load the weights from VGG16 and fine tune them, instead of using random initialization. After that, I use convolutional, batch norm, and max pooling, layers, ending with a softmax layer for binary prediction.
 
 Discussion and Future: The Stanford ML Group, which includes Professor Andrew Ng and Pranav Rajpurkar, has developed a CNN that not only classifies 14 different thoracic diseases, but also pinpoints the location in the chest that causes the CNN to make its prediction, as seen in their figure below. Their algorithm beats the "gold standard" of a committee of radiologists. Now they are working to deploy a website where anyone in the world who lacks access to a Radiologist can upload their own X-Ray image file to get a fast, free diagnosis.
 
