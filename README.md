@@ -30,7 +30,7 @@ The Stanford ML Group, which includes Professor Andrew Ng and Pranav Rajpurkar, 
 Acknowledgements:
 
 
-I would like to thank my project mentor, Cristian Bartolomé Aråamburu, for his guidance throughout my project during my proposal and milestone. I would also like to thank the other TAs in CS 230, especially Steven Chen, for their time and assistance during Office Hours and Sarah Najmark for her excellent instruction during Friday TA Sections.
+I would like to thank my project mentor, Cristian Bartolomé Aramburu, for his guidance throughout my project during my proposal and milestone. I would also like to thank the other TAs in CS 230, especially Steven Chen, for their time and assistance during Office Hours and Sarah Najmark for her excellent instruction during Friday TA Sections.
 
 
 Works Cited:
