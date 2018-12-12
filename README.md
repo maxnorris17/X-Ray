@@ -16,6 +16,13 @@ Model:
 
 For the first few layers, which capture general details like blobs, patches, edges, ectetera, I load the weights from VGG16 and fine tune them, instead of using random initialization. After that, I use convolutional, batch norm, and max pooling, layers, ending with a softmax layer for binary prediction.
 
+How to run this code:
+1. Set up an AWS account. Without a GPU testing this code froze my MacBook Pro. You will need to log in from terminal with the secure .pem file amazon sends you.
+2. Set up an AWS instance (at first I read instructions that recommended instance type p2.xlarge, but TA Steven Chen said p3.2xlarge would be faster, the downside is it is more expensive since it uses more GPUs)
+3. Upload a zip file to your p3.2xlarge AWS instance with a) the 1.py file b) the VGG16 weights .5 file c) the chest_xray folder, which has instide a folder for train, val, and test.
+4. Unzip the compressed file using "unzip" in terminal
+5. Instead of using separate .py files for each model you wish to run, I found it easier to learn how to use vim commands from terminal to edit the 1.py file to tune hyperparameters. I experimented with changing the batch size, the learning rate, the optimization method (RMSprop vs. Adam) and the number of epochs (the number of times the CNN runs through every training image).
+
 Discussion and Future: 
 
 The Stanford ML Group, which includes Professor Andrew Ng and Pranav Rajpurkar, has developed a CNN that not only classifies 14 different thoracic diseases, but also pinpoints the location in the chest that causes the CNN to make its prediction, as seen in their figure below. Their algorithm beats the "gold standard" of a committee of radiologists. Now they are working to deploy a website where anyone in the world who lacks access to a Radiologist can upload their own X-Ray image file to get a fast, free diagnosis.
