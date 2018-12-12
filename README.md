@@ -13,8 +13,8 @@ Discussion and Future: The Stanford ML Group, which includes Professor Andrew Ng
 Acknowledgements:
 I would like to thank my project mentor, Cristian Bartolomé Aråamburu, for his guidance throughout my project during my proposal and milestone. I would also like to thank the other TAs in CS 230, especially Steven Chen, for their time and assistance during Office Hours and Sarah Najmark for her excellent instruction during Friday TA Sections.​
 
-Works Cited:​
+Works Cited:​\n
 [1] https://www.kaggle.com/aakashnain/beating-everything-with-depthwise-convolution?scriptVersionId=4028995 [Accessed: December 2, 2018]​
-[2] https://nihcc.app.box.com/v/ChestXray-NIHCC [Accessed: October 10, 2018]​
-[3] https://stanfordmlgroup.github.io/projects/chexnet/ [Accessed: October 15, 2018]​
+[2] https://nihcc.app.box.com/v/ChestXray-NIHCC [Accessed: October 10, 2018]​\n
+[3] https://stanfordmlgroup.github.io/projects/chexnet/ [Accessed: October 15, 2018]​\n
 [4] https://aws.amazon.com/blogs/machine-learning/get-started-with-deep-learning-using-the-aws-deep-learning-ami/ [Accessed: December 2, 2018]​
