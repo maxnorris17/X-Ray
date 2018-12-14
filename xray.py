@@ -36,37 +36,27 @@ from keras import backend as K
 color = sns.color_palette()
 import tensorflow as tf
 
-# Set the seed for hash based operations in python
-os.environ['PYTHONHASHSEED'] = '0'
-
-# Set the numpy seed
-np.random.seed(111)
-
-# Disable multi-threading in tensorflow ops
+# Enable multi-threading in tensorflow 
 session_conf = tf.ConfigProto(intra_op_parallelism_threads=64, inter_op_parallelism_threads=64)
 
-# Set the random seed in tensorflow at graph level
+# Set seeds
+os.environ['PYTHONHASHSEED'] = '0'
+np.random.seed(111)
 tf.set_random_seed(111)
+aug.seed(111)
 
 # Define a tensorflow session with above session configs
 sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)
 
-# Set the session in keras
+# Define a session in keras
 K.set_session(sess)
 
-# Make the augmentation sequence deterministic
-aug.seed(111)
-
-# Define path to the data directory
+# Define path to the image data directory (use ubuntu if computing on AWS)
 data_dir = Path("/home/ubuntu/xray/chest_xray/")
 
-# Path to train directory (Fancy pathlib...no more os.path!!)
+# Path to train, val, test directory 
 train_dir = data_dir / 'train'
-
-# Path to validation directory
 val_dir = data_dir / 'val'
-
-# Path to test directory
 test_dir = data_dir / 'test'
 
 # Get the path to the normal and pneumonia sub-directories
@@ -77,7 +67,7 @@ pneumonia_cases_dir = train_dir / 'PNEUMONIA'
 normal_cases = normal_cases_dir.glob('*.jpeg')
 pneumonia_cases = pneumonia_cases_dir.glob('*.jpeg')
 
-# An empty list. We will insert the data into this list in (img_path, label) format
+# An empty list. Will insert the data into this list in (img_path, label) format
 train_data = []
 
 # Go through all the normal cases. The label for these cases will be 0
@@ -92,9 +82,9 @@ for img in pneumonia_cases:
 train_data = pd.DataFrame(train_data, columns=['image', 'label'],index=None)
 
 # Shuffle the data 
-# !! train_data = train_data.sample(frac=1.).reset_index(drop=True)
 train_data = train_data.sample(frac=1.).reset_index(drop=True)
 
+##### I one ran the following code once to produce barplot and image data for my project poster
 # #### How many samples for each class are there in the dataset?
 # # Get the counts for each class
 # cases_count = train_data['label'].value_counts()
@@ -144,7 +134,6 @@ pneumonia_cases = pneumonia_cases_dir.glob('*.jpeg')
 # List that are going to contain validation images data and the corresponding labels
 valid_data = []
 valid_labels = []
-
 
 # Some images are in grayscale while majority of them contains 3 channels. 
 # So, if the image is grayscale, we will convert into a image with 3 channels.
@@ -295,8 +284,7 @@ model.summary()
 # Open the VGG16 weight file
 f = h5py.File("/home/ubuntu/xray/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5", 'r')
 
-
-# Select the layers for which you want to set weight.
+# Set first four convolution layers to vgg16 weights:
 
 w,b = f['block1_conv1']['block1_conv1_W_1:0'], f['block1_conv1']['block1_conv1_b_1:0']
 model.layers[1].set_weights([w,b])
@@ -312,13 +300,15 @@ model.layers[5].set_weights([w,b])
 
 f.close()
 
-# opt = RMSprop(lr=0.0001, decay=1e-6)
+# Edit here to tune/test hyperparamters.
+# I tested with different learning rates and batch sizes
+# Without a learning rate = 0.0001 the model would not converge to a global minimum
 opt = Adam(lr=0.0001, decay=1e-5)
 es = EarlyStopping(patience=5)
 chkpt = ModelCheckpoint(filepath='best_model_todate', save_best_only=True, save_weights_only=True)
 model.compile(loss='binary_crossentropy', metrics=['accuracy'], optimizer=opt)
 batch_size = 64
-nb_epochs = 10
+nb_epochs = 6
 
 # Get a train data generator
 train_data_gen = data_gen(data=train_data, batch_size=batch_size)
@@ -372,9 +362,6 @@ for img in pneumonia_cases:
 test_data = np.array(test_data)
 test_labels = np.array(test_labels)
 
-print("Total number of test examples: ", test_data.shape) # (624, 224, 224, 3)
-print("Total number of labels:", test_labels.shape) # (624, 2)
-
 # Evaluation on test dataset
 test_loss, test_score = model.evaluate(test_data, test_labels, batch_size=16)
 print("Loss on test set: ", test_loss)
@@ -387,9 +374,6 @@ preds = np.argmax(preds, axis=-1)
 # Original labels
 orig_test_labels = np.argmax(test_labels, axis=-1)
 
-print(orig_test_labels.shape) # (624,)
-print(preds.shape) # (624,)
-
 # # Get the confusion matrix 
 cm  = confusion_matrix(orig_test_labels, preds)
 plt.figure()
@@ -399,7 +383,7 @@ plt.yticks(range(2), ['Normal', 'Pneumonia'], fontsize=16)
 plt.show()
 
 
-# Calculate Precision and Recall
+# Calculate Precision, Recall, and F1 Score
 tn, fp, fn, tp = cm.ravel()
 precision = tp/(tp+fp)
 recall = tp/(tp+fn)
@@ -408,5 +392,4 @@ f1Score = 2*precision*recall/(precision+recall)
 print("Recall of the model is {:.2f}".format(recall))
 print("Precision of the model is {:.2f}".format(precision))
 print("F1 Score of the model is {:.2f}".format(f1Score))
-
 # Precision and Recall follows a trade-off, F1 Score is the harmonic mean of the two
